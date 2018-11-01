@@ -1,0 +1,10 @@
+name: MineLoaderJ
+version: 1.0
+main: tk.a0x00000000.MineLoaderJ.Main
+commands:
+  eval:
+    description: "Evaluate JavaScript"
+    usage: /eval <JavaScript string>
+    aliases: [ e ]
+  rua:
+    description: "rua"
