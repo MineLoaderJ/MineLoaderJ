@@ -27,6 +27,7 @@ var Pointer_1 = require("../Pointer");
 var ChatColor_1 = require("./bukkit/ChatColor");
 var Logger_1 = require("./Logger");
 var util_1 = require("util");
+var path_1 = require("path");
 var events_1 = require("events");
 var MineLoaderJ = /** @class */ (function (_super) {
     __extends(MineLoaderJ, _super);
@@ -126,6 +127,8 @@ var MineLoaderJ = /** @class */ (function (_super) {
     };
     MineLoaderJ.ChatColor = ChatColor_1.default;
     MineLoaderJ.Logger = Logger_1.default;
+    MineLoaderJ.jarPath = __UTIL_getPath();
+    MineLoaderJ.path = path_1.dirname(MineLoaderJ.jarPath);
     MineLoaderJ.ENABLE = 'enable';
     MineLoaderJ.DISABLE = 'disable';
     return MineLoaderJ;

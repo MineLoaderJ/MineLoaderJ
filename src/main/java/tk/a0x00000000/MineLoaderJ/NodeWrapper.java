@@ -26,7 +26,8 @@ public class NodeWrapper {
     Thread currentThread;
     static final String SCRIPT_DIRECTORY = "js-bootstrap";
     static final String SCRIPT_ENTRY = "index.js";
-    static final String JS_FUNC_PREFIX = "__REFLECTOR_";
+    static final String JS_FUNC_PREFIX_REFLECTOR = "__REFLECTOR_";
+    static final String JS_FUNC_PREFIX_UTIL = "__UTIL_";
 
 
 //    private Queue<Runnable> tasks = new LinkedList<>();
@@ -82,11 +83,14 @@ public class NodeWrapper {
                 releaseV8Values(_args);
                 args.release();
                 return null;
-            }, JS_FUNC_PREFIX + method.getName());
+            }, JS_FUNC_PREFIX_REFLECTOR + method.getName());
         }
         runtime.registerJavaMethod((caller, args) -> {
             return new Long(runtime.getObjectReferenceCount()).intValue();
         }, "getRefs");
+        runtime.registerJavaMethod((caller, args) -> {
+            return getClass().getProtectionDomain().getCodeSource().getLocation().toString().replaceFirst("file:/", "");
+        }, JS_FUNC_PREFIX_UTIL + "getPath");
         owner.registerBootstrapFunctions(runtime, reflector);
     }
 

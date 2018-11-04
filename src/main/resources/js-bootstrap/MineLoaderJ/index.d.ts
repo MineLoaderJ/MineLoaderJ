@@ -19,6 +19,8 @@ export declare class MineLoaderJ extends EventEmitter {
     consoleSender: JavaObject;
     ConsoleSender: JavaClass;
     sendMessage: Method;
+    static jarPath: string;
+    static path: string;
     logger: _Logger;
     static ENABLE: string;
     static DISABLE: string;
