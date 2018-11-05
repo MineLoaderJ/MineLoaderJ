@@ -6,5 +6,9 @@ commands:
     description: "Evaluate JavaScript"
     usage: /eval <JavaScript string>
     aliases: [ e ]
+  js:
+    description: "Prefix command for js plugins"
+    usage: /js <js plugin command> [js command arguments]
+    aliases: [ mlj, mj, j ]
   rua:
     description: "rua"

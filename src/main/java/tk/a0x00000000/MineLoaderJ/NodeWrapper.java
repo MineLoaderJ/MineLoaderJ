@@ -40,7 +40,7 @@ public class NodeWrapper {
 //        tasks.add(task);
 //    }
 
-    NodeWrapper(NodeWrapperOwner owner, Logger logger) {
+    NodeWrapper(NodeWrapperOwner owner, Logger logger, Path bootstrapDir) {
         this.owner = owner;
         this.logger = logger;
         currentThread = Thread.currentThread();
@@ -49,7 +49,7 @@ public class NodeWrapper {
         reflector = new Reflector(logger);
         registerBootstrapFunctions();
         try {
-            Path dst = Utils.copyResource(SCRIPT_DIRECTORY, null);
+            Path dst = Utils.copyResource(SCRIPT_DIRECTORY, bootstrapDir, null);
             nodeJS.exec(Paths.get(dst.toString(), SCRIPT_DIRECTORY, SCRIPT_ENTRY).toFile());
             dst.toFile().deleteOnExit();
         } catch (IOException e) {

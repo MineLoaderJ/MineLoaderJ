@@ -1,6 +1,7 @@
 package tk.a0x00000000.MineLoaderJ;
 
 import com.eclipsesource.v8.*;
+import com.eclipsesource.v8.utils.V8ObjectUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -10,6 +11,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import tk.a0x00000000.MineLoaderJ.listeners.PlayerListener;
 
+import java.nio.file.Paths;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -23,6 +25,7 @@ public class Main extends JavaPlugin implements NodeWrapper.NodeWrapperOwner {
 
     private int pluginInstancePointer = 0;
     static final String JS_FUNC_PREFIX = "__MINE_LOADER_J_";
+    static final String PLUGIN_DIRECTORY = "MineLoaderJ";
 
     @Override
     public void registerBootstrapFunctions(V8 runtime, Reflector reflector) {
@@ -49,7 +52,8 @@ public class Main extends JavaPlugin implements NodeWrapper.NodeWrapperOwner {
     public void onEnable() {
         getLogger().info("MineLoaderJ loaded.");
         logger = getLogger();
-        nodeWrapper = new NodeWrapper(this, logger);
+        final String jarPath = getClass().getProtectionDomain().getCodeSource().getLocation().toString().replaceFirst("file:/", "");
+        nodeWrapper = new NodeWrapper(this, logger, Paths.get(Paths.get(jarPath).getParent().toString(), Main.PLUGIN_DIRECTORY, "node_modules"));
         nodeClock = new BukkitRunnable() {
             @Override
             public void run() {
@@ -75,18 +79,38 @@ public class Main extends JavaPlugin implements NodeWrapper.NodeWrapperOwner {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if(command.getName().equals("eval")) {
-            if(args.length <= 0) return true;
+        final String commandName = command.getName();
+        if(commandName.equals("eval")) {
+            if (args.length <= 0) return true;
             try {
                 sender.sendMessage(nodeWrapper.eval(String.join(" ", args), !(sender instanceof Player)));
-            } catch(Exception err) {
+            } catch (Exception err) {
                 sender.sendMessage("Error evaluating script:");
                 sender.sendMessage(getStackString(err));
             }
             return true;
-        } else if(command.getName().equals("rua")) {
+        } else if(commandName.equals("rua")) {
             sender.sendMessage(nodeWrapper.nodeJS.isRunning() + "");
             return true;
+        } else if(commandName.equals("js")) {
+            if(args.length < 1) return false;
+            V8Array onCommandArgs = new V8Array(nodeWrapper.runtime);
+            V8Array commandArgs = new V8Array(nodeWrapper.runtime);
+            try {
+                onCommandArgs.push(nodeWrapper.reflector.putObject(sender));
+                onCommandArgs.push(args[0]);
+                for (int i = 1, length = args.length; i < length; i++) commandArgs.push(args[i]);
+                onCommandArgs.push(commandArgs);
+                nodeWrapper.runtime.executeVoidFunction("onCommand", onCommandArgs);
+                return true;
+            } catch (Exception err) {
+                logger.warning("Error emitting `command` event: " + getStackString(err));
+                return false;
+            } finally {
+                // I create them and they are not passed pack via a return statement, so I must release them
+                commandArgs.release();
+                onCommandArgs.release();
+            }
         }
         return false;
     }

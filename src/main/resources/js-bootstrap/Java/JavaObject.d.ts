@@ -6,6 +6,10 @@ export declare class JavaObject {
     name: string;
     class: JavaClass;
     static classLoader: (className: string) => JavaClass;
+    /**
+     * @description `JavaObject` constructor, returns an uninitialized `JavaObject`.
+     * @param param0 Name and pointer of the object.
+     */
     constructor({ name, pointer }: {
         name: string;
         pointer: Pointer;

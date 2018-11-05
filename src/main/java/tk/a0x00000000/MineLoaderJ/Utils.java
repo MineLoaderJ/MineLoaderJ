@@ -8,6 +8,7 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.Enumeration;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -36,11 +37,11 @@ class Utils {
         }
     }
 
-    static Path copyResource(String resource, ClassLoader loader) throws IOException {
+    static Path copyResource(String resource, Path to, ClassLoader loader) throws IOException {
         if(null == loader) loader = Utils.class.getClassLoader();
         URL url = loader.getResource(resource);
         if(null == url) throw new IOException("No such resource");
-        Path dir = Files.createTempDirectory(Utils.class.getSimpleName());
+        Path dir = null != to ? to : Files.createTempDirectory(Utils.class.getSimpleName());
         String[] paths = url.toString().split("!/");
         String jarPath = paths[0] + "!/";
         URL jarURL = new URL(jarPath);
@@ -58,7 +59,7 @@ class Utils {
                     File parent = dst.toFile().getParentFile();
                     if(!parent.exists()) Files.createDirectories(parent.toPath());
                     try(InputStream is = loader.getResourceAsStream(name)) {
-                        Files.copy(is, dst);
+                        Files.copy(is, dst, StandardCopyOption.REPLACE_EXISTING);
                     }
                 }
             }

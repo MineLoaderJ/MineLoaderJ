@@ -3,6 +3,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var Pointer_1 = require("../Pointer");
 var assert = require("assert");
 var JavaObject = /** @class */ (function () {
+    /**
+     * @description `JavaObject` constructor, returns an uninitialized `JavaObject`.
+     * @param param0 Name and pointer of the object.
+     */
     function JavaObject(_a) {
         var name = _a.name, pointer = _a.pointer;
         this.name = name || '';

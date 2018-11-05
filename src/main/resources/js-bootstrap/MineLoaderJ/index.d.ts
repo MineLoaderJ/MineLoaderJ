@@ -8,6 +8,25 @@ import { EventEmitter } from 'events';
 declare global {
     const onDisable: Function;
     const __INSPECT: Function;
+    const onCommand: Function;
+}
+export interface CommandDescription {
+    description: string;
+    usage: string;
+    aliases: string[];
+    onCommand: (sender: JavaObject & {
+        sendMessage: (...args: string[]) => void;
+    }, commandName: string, args: string[]) => boolean;
+    plugin?: Plugin;
+}
+export interface CommandDescriptions {
+    [commandName: string]: CommandDescription;
+}
+export interface Plugin {
+    init(instance: MineLoaderJ, logger: _Logger): void;
+    name: string;
+    logger: _Logger;
+    commands: CommandDescriptions;
 }
 export declare class MineLoaderJ extends EventEmitter {
     static ChatColor: typeof _ChatColor;
@@ -21,13 +40,20 @@ export declare class MineLoaderJ extends EventEmitter {
     sendMessage: Method;
     static jarPath: string;
     static path: string;
+    static pluginDirectoryName: string;
+    static pluginPath: string;
     logger: _Logger;
     static ENABLE: string;
     static DISABLE: string;
+    plugins: Plugin[];
+    commands: CommandDescriptions;
     /**
      * @description Don't instantiate this class manually!
      */
     constructor();
+    private static getOnUncaughtErrorHandler;
+    private registerGlobalFunctions;
+    private loadPlugins;
     /**
      * @description Send messages directly to the console.
      * @param messages Messages to send.

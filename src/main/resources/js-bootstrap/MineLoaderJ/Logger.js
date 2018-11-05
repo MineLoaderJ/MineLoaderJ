@@ -13,7 +13,7 @@ var Logger = /** @class */ (function () {
         for (var _i = 0; _i < arguments.length; _i++) {
             messages[_i] = arguments[_i];
         }
-        __MINE_LOADER_J_logSEVERE(this.prefix + messages.join(' '));
+        __MINE_LOADER_J_logSEVERE("\u001B[31m" + this.prefix + messages.join(' ') + "\u001B[0m");
     };
     /**
      * @description Alias of `severe`.
@@ -24,7 +24,7 @@ var Logger = /** @class */ (function () {
         for (var _i = 0; _i < arguments.length; _i++) {
             messages[_i] = arguments[_i];
         }
-        __MINE_LOADER_J_logSEVERE(this.prefix + messages.join(' '));
+        __MINE_LOADER_J_logSEVERE("\u001B[31m" + this.prefix + messages.join(' ') + "\u001B[0m");
     };
     /**
      * @description Alias of `severe`.
@@ -35,7 +35,7 @@ var Logger = /** @class */ (function () {
         for (var _i = 0; _i < arguments.length; _i++) {
             messages[_i] = arguments[_i];
         }
-        __MINE_LOADER_J_logSEVERE(this.prefix + messages.join(' '));
+        __MINE_LOADER_J_logSEVERE("\u001B[31m" + this.prefix + messages.join(' ') + "\u001B[0m");
     };
     /**
      * @description Write warning logging message.
@@ -46,7 +46,7 @@ var Logger = /** @class */ (function () {
         for (var _i = 0; _i < arguments.length; _i++) {
             messages[_i] = arguments[_i];
         }
-        __MINE_LOADER_J_logWARNING(this.prefix + messages.join(' '));
+        __MINE_LOADER_J_logWARNING("\u001B[33m" + this.prefix + messages.join(' ') + "\u001B[0m");
     };
     /**
      * @description Alias of `warning`.
@@ -57,7 +57,7 @@ var Logger = /** @class */ (function () {
         for (var _i = 0; _i < arguments.length; _i++) {
             messages[_i] = arguments[_i];
         }
-        __MINE_LOADER_J_logWARNING(this.prefix + messages.join(' '));
+        __MINE_LOADER_J_logWARNING("\u001B[33m" + this.prefix + messages.join(' ') + "\u001B[0m");
     };
     /**
      * @description Write info logging message.
