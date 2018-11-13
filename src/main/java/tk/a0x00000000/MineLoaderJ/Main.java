@@ -54,7 +54,7 @@ public class Main extends JavaPlugin implements NodeWrapper.NodeWrapperOwner {
         getLogger().info("MineLoaderJ loaded.");
         logger = getLogger();
         final String jarPath = getClass().getProtectionDomain().getCodeSource().getLocation().toString().replaceFirst("file:/", "");
-        nodeWrapper = new NodeWrapper(this, logger, Paths.get(System.getProperty("os.name").contains("darwin") ? "/" : "", Paths.get(jarPath).getParent().toString(), Main.PLUGIN_DIRECTORY, "node_modules"));
+        nodeWrapper = new NodeWrapper(this, logger, Paths.get(System.getProperty("os.name").contains("Mac OS") ? "/" : "", Paths.get(jarPath).getParent().toString(), Main.PLUGIN_DIRECTORY, "node_modules"));
         nodeClock = new BukkitRunnable() {
             @Override
             public void run() {
