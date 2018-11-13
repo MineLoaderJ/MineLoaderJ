@@ -5,6 +5,9 @@ import Method from '../Java/Method';
 import _ChatColor from './bukkit/ChatColor';
 import _Logger from './Logger';
 import { EventEmitter } from 'events';
+import { CommandSender } from './bukkit/command/CommandSender';
+import * as bukkit from './bukkit';
+import * as helpers from './helpers';
 declare global {
     const onDisable: Function;
     const __INSPECT: Function;
@@ -14,9 +17,7 @@ export interface CommandDescription {
     description: string;
     usage: string;
     aliases: string[];
-    onCommand: (sender: JavaObject & {
-        sendMessage: (...args: string[]) => void;
-    }, commandName: string, args: string[]) => boolean;
+    onCommand: (sender: CommandSender, commandName: string, args: string[]) => boolean;
     plugin?: Plugin;
 }
 export interface CommandDescriptions {
@@ -30,6 +31,8 @@ export interface Plugin {
 }
 export declare class MineLoaderJ extends EventEmitter {
     static ChatColor: typeof _ChatColor;
+    static bukkit: typeof bukkit;
+    static helpers: typeof helpers;
     static Logger: typeof _Logger;
     static instance: MineLoaderJ;
     pluginInstance: JavaObject;

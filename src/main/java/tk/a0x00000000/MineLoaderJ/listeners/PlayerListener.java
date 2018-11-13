@@ -18,6 +18,7 @@ public class PlayerListener implements Listener {
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
+        Player player;
         Bukkit.broadcastMessage(ChatColor.GOLD + "Greetings from MineLoaderJ, " + event.getPlayer().getDisplayName());
     }
 

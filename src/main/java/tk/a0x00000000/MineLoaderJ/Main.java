@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
+import tk.a0x00000000.MineLoaderJ.block.Block;
 import tk.a0x00000000.MineLoaderJ.listeners.PlayerListener;
 
 import java.nio.file.Paths;
@@ -53,7 +54,7 @@ public class Main extends JavaPlugin implements NodeWrapper.NodeWrapperOwner {
         getLogger().info("MineLoaderJ loaded.");
         logger = getLogger();
         final String jarPath = getClass().getProtectionDomain().getCodeSource().getLocation().toString().replaceFirst("file:/", "");
-        nodeWrapper = new NodeWrapper(this, logger, Paths.get(Paths.get(jarPath).getParent().toString(), Main.PLUGIN_DIRECTORY, "node_modules"));
+        nodeWrapper = new NodeWrapper(this, logger, Paths.get(System.getProperty("os.name").contains("darwin") ? "/" : "", Paths.get(jarPath).getParent().toString(), Main.PLUGIN_DIRECTORY, "node_modules"));
         nodeClock = new BukkitRunnable() {
             @Override
             public void run() {
@@ -80,37 +81,38 @@ public class Main extends JavaPlugin implements NodeWrapper.NodeWrapperOwner {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         final String commandName = command.getName();
-        if(commandName.equals("eval")) {
-            if (args.length <= 0) return true;
-            try {
-                sender.sendMessage(nodeWrapper.eval(String.join(" ", args), !(sender instanceof Player)));
-            } catch (Exception err) {
-                sender.sendMessage("Error evaluating script:");
-                sender.sendMessage(getStackString(err));
-            }
-            return true;
-        } else if(commandName.equals("rua")) {
-            sender.sendMessage(nodeWrapper.nodeJS.isRunning() + "");
-            return true;
-        } else if(commandName.equals("js")) {
-            if(args.length < 1) return false;
-            V8Array onCommandArgs = new V8Array(nodeWrapper.runtime);
-            V8Array commandArgs = new V8Array(nodeWrapper.runtime);
-            try {
-                onCommandArgs.push(nodeWrapper.reflector.putObject(sender));
-                onCommandArgs.push(args[0]);
-                for (int i = 1, length = args.length; i < length; i++) commandArgs.push(args[i]);
-                onCommandArgs.push(commandArgs);
-                nodeWrapper.runtime.executeVoidFunction("onCommand", onCommandArgs);
+        switch (commandName) {
+            case "eval":
+                if (args.length <= 0) return true;
+                try {
+                    sender.sendMessage(nodeWrapper.eval(String.join(" ", args), !(sender instanceof Player)));
+                } catch (Exception err) {
+                    sender.sendMessage("Error evaluating script:");
+                    sender.sendMessage(getStackString(err));
+                }
                 return true;
-            } catch (Exception err) {
-                logger.warning("Error emitting `command` event: " + getStackString(err));
-                return false;
-            } finally {
-                // I create them and they are not passed pack via a return statement, so I must release them
-                commandArgs.release();
-                onCommandArgs.release();
-            }
+            case "rua":
+                sender.sendMessage(nodeWrapper.nodeJS.isRunning() + "");
+                return true;
+            case "js":
+                if (args.length < 1) return false;
+                V8Array onCommandArgs = new V8Array(nodeWrapper.runtime);
+                V8Array commandArgs = new V8Array(nodeWrapper.runtime);
+                try {
+                    onCommandArgs.push(nodeWrapper.reflector.putObject(sender));
+                    onCommandArgs.push(args[0]);
+                    for (int i = 1, length = args.length; i < length; i++) commandArgs.push(args[i]);
+                    onCommandArgs.push(commandArgs);
+                    nodeWrapper.runtime.executeVoidFunction("onCommand", onCommandArgs);
+                    return true;
+                } catch (Exception err) {
+                    logger.warning("Error emitting `command` event: " + getStackString(err));
+                    return false;
+                } finally {
+                    // I create them and they are not passed pack via a return statement, so I must release them
+                    commandArgs.release();
+                    onCommandArgs.release();
+                }
         }
         return false;
     }

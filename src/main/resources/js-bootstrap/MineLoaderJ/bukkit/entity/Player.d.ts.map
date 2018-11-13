@@ -1,0 +1,1 @@
+{"version":3,"file":"Player.d.ts","sourceRoot":"","sources":["../../../../src/MineLoaderJ/bukkit/entity/Player.ts"],"names":[],"mappings":"AAAA,OAAO,aAAa,MAAM,0BAA0B,CAAA;AACpD,OAAO,OAAO,MAAM,kBAAkB,CAAA;AAGtC,qBAAa,MAAO,SAAQ,aAAa;IACvC,OAAO,CAAC,MAAM,CAAC,SAAS,CAAQ;gBACpB,EAAE,IAAI,EAAE,OAAO,EAAE,EAAE;QAAE,IAAI,EAAE,MAAM,CAAC;QAAC,OAAO,EAAE,OAAO,CAAA;KAAE;IAgBjE,QAAQ;CAGT"}

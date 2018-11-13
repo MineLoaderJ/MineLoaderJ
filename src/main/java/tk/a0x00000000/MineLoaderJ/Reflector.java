@@ -278,7 +278,7 @@ public class Reflector {
         } catch (IllegalAccessException | InvocationTargetException | RuntimeException e) {
             if(null != logger) {
                 logger.info(getStackString(e));
-                logger.info("Method signature" + (null != method ? getMethodSignature(method) : "[ the method itself is null ]"));
+                logger.info("Method signature: " + (null != method ? getMethodSignature(method) : "[ the method itself is null ]"));
                 logger.info("Got caller type: " + (null != obj ? obj.getClass().getName() : "null"));
                 logger.info("Got arguments length: " + (null != _args ? _args.length : 0));
                 logger.info("Got argument types: " + getArgumentTypes(_args));

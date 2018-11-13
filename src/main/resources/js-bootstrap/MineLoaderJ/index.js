@@ -67,6 +67,10 @@ var path_1 = require("path");
 var events_1 = require("events");
 var assert = require("assert");
 var fs = require("fs");
+var CommandSender_1 = require("./bukkit/command/CommandSender");
+var Player_1 = require("./bukkit/entity/Player");
+var bukkit = require("./bukkit");
+var helpers = require("./helpers");
 var MineLoaderJ = /** @class */ (function (_super) {
     __extends(MineLoaderJ, _super);
     /**
@@ -152,41 +156,43 @@ var MineLoaderJ = /** @class */ (function (_super) {
         });
         // Register `onCommand` hook
         function onCommand(senderPointer, commandName, args) {
-            var e_2, _a;
             if (!(commandName in self.commands))
                 return;
+            /*
+            const name: string = `commandSender@${senderPointer}`
+            let sender: any = new JavaObject({
+              name,
+              pointer: new Pointer(senderPointer, name)
+            }).init()
+            let sendMessage: Method | Method[] = sender.getClass().methods.sendMessage
+            if(sendMessage instanceof Array) {
+              for(let m of sendMessage) {
+                if(m.argumentTypes.length == 1 && m.argumentTypes[0] == 'java.lang.String') {
+                  sendMessage = m
+                  break
+                }
+              }
+            }
+            function _sendMessage(...args: string[]) {
+              (sendMessage as Method).invoke(sender, [ args.join(' ') ])
+            }
+            sender.sendMessage = _sendMessage
+            */
             var name = "commandSender@" + senderPointer;
-            var sender = new JavaObject_1.default({
-                name: name,
-                pointer: new Pointer_1.default(senderPointer, name)
-            }).init();
-            var sendMessage = sender.getClass().methods.sendMessage;
-            if (sendMessage instanceof Array) {
-                try {
-                    for (var sendMessage_1 = __values(sendMessage), sendMessage_1_1 = sendMessage_1.next(); !sendMessage_1_1.done; sendMessage_1_1 = sendMessage_1.next()) {
-                        var m = sendMessage_1_1.value;
-                        if (m.argumentTypes.length == 1 && m.argumentTypes[0] == 'java.lang.String') {
-                            sendMessage = m;
-                            break;
-                        }
-                    }
-                }
-                catch (e_2_1) { e_2 = { error: e_2_1 }; }
-                finally {
-                    try {
-                        if (sendMessage_1_1 && !sendMessage_1_1.done && (_a = sendMessage_1.return)) _a.call(sendMessage_1);
-                    }
-                    finally { if (e_2) throw e_2.error; }
-                }
+            var sender;
+            if (__REFLECTOR_getTypeNameOfObject(senderPointer, '').match(/Player$/)) {
+                var _name = "player@" + senderPointer;
+                sender = new Player_1.Player({
+                    name: name,
+                    pointer: new Pointer_1.default(senderPointer, name)
+                });
             }
-            function _sendMessage() {
-                var args = [];
-                for (var _i = 0; _i < arguments.length; _i++) {
-                    args[_i] = arguments[_i];
-                }
-                sendMessage.invoke(sender, [args.join(' ')]);
+            else {
+                sender = new CommandSender_1.CommandSender({
+                    name: name,
+                    pointer: new Pointer_1.default(senderPointer, name)
+                });
             }
-            sender.sendMessage = _sendMessage;
             if (!self.commands[commandName].onCommand(sender, commandName, args)) {
                 sender.sendMessage("Usage: " + self.commands[commandName].usage);
             }
@@ -208,7 +214,7 @@ var MineLoaderJ = /** @class */ (function (_super) {
     };
     MineLoaderJ.prototype.loadPlugins = function (callback) {
         return __awaiter(this, void 0, void 0, function () {
-            var e_3, _a, e_4, _b, e_5, _c, readdir, mkdir, stat, pluginNames, info, err_1, err_2, err_3, pluginNames_1, pluginNames_1_1, pluginName, plugin, commands, commands_1, commands_1_1, command, commands_2, commands_2_1, command;
+            var e_2, _a, e_3, _b, e_4, _c, readdir, mkdir, stat, pluginNames, info, err_1, err_2, err_3, pluginNames_1, pluginNames_1_1, pluginName, plugin, commands, commands_1, commands_1_1, command, commands_2, commands_2_1, command;
             return __generator(this, function (_d) {
                 switch (_d.label) {
                     case 0:
@@ -277,12 +283,12 @@ var MineLoaderJ = /** @class */ (function (_super) {
                                                 }
                                             }
                                         }
-                                        catch (e_4_1) { e_4 = { error: e_4_1 }; }
+                                        catch (e_3_1) { e_3 = { error: e_3_1 }; }
                                         finally {
                                             try {
                                                 if (commands_1_1 && !commands_1_1.done && (_b = commands_1.return)) _b.call(commands_1);
                                             }
-                                            finally { if (e_4) throw e_4.error; }
+                                            finally { if (e_3) throw e_3.error; }
                                         }
                                         try {
                                             for (commands_2 = __values(commands), commands_2_1 = commands_2.next(); !commands_2_1.done; commands_2_1 = commands_2.next()) {
@@ -291,12 +297,12 @@ var MineLoaderJ = /** @class */ (function (_super) {
                                                 this.commands[command] = plugin.commands[command];
                                             }
                                         }
-                                        catch (e_5_1) { e_5 = { error: e_5_1 }; }
+                                        catch (e_4_1) { e_4 = { error: e_4_1 }; }
                                         finally {
                                             try {
                                                 if (commands_2_1 && !commands_2_1.done && (_c = commands_2.return)) _c.call(commands_2);
                                             }
-                                            finally { if (e_5) throw e_5.error; }
+                                            finally { if (e_4) throw e_4.error; }
                                         }
                                     }
                                     this.plugins.push(plugin);
@@ -308,12 +314,12 @@ var MineLoaderJ = /** @class */ (function (_super) {
                                 }
                             }
                         }
-                        catch (e_3_1) { e_3 = { error: e_3_1 }; }
+                        catch (e_2_1) { e_2 = { error: e_2_1 }; }
                         finally {
                             try {
                                 if (pluginNames_1_1 && !pluginNames_1_1.done && (_a = pluginNames_1.return)) _a.call(pluginNames_1);
                             }
-                            finally { if (e_3) throw e_3.error; }
+                            finally { if (e_2) throw e_2.error; }
                         }
                         if (!this.plugins.length)
                             this.logger.warn('No js plugins are loaded');
@@ -349,8 +355,10 @@ var MineLoaderJ = /** @class */ (function (_super) {
         __MINE_LOADER_J_broadcastMessage(messages.join(' '));
     };
     MineLoaderJ.ChatColor = ChatColor_1.default;
+    MineLoaderJ.bukkit = bukkit;
+    MineLoaderJ.helpers = helpers;
     MineLoaderJ.Logger = Logger_1.default;
-    MineLoaderJ.jarPath = __UTIL_getPath();
+    MineLoaderJ.jarPath = process.platform == 'darwin' ? path_1.join('/', __UTIL_getPath()) : __UTIL_getPath();
     MineLoaderJ.path = path_1.dirname(MineLoaderJ.jarPath);
     MineLoaderJ.pluginDirectoryName = 'MineLoaderJ';
     MineLoaderJ.pluginPath = path_1.join(MineLoaderJ.path, MineLoaderJ.pluginDirectoryName);

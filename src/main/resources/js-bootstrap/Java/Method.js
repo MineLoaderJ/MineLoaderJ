@@ -95,6 +95,7 @@ var Method = /** @class */ (function (_super) {
                 case 'boolean': return arg;
                 default: {
                     assert(arg instanceof JavaObject_1.default && arg.pointer.pointer > 0, "Invalid argument type (index: " + index + ")");
+                    rawIntMap[index] = false;
                     return arg.pointer.pointer;
                 }
             }
